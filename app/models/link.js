@@ -11,8 +11,6 @@ var linkSchema = new Schema({
   baseUrl: String
 });
 
-var Link = mongoose.model('Link', linkSchema);
-
 var createShortUrl = function(url) {
   var shasum = crypto.createHash('sha1');
   shasum.update(url);
@@ -21,10 +19,12 @@ var createShortUrl = function(url) {
 
 linkSchema.pre('save', function(next) {
   var code = createShortUrl(this.url);
+  console.log('code:', code);
   this.code = code; // => save the code
-  // console.log('\n\n\n\n\n\n\n\nthis.code: ', this.code);
-  // next(this.code);
+  console.log(this);
   next();
 });
+
+var Link = mongoose.model('Link', linkSchema);
 
 module.exports = Link;

@@ -104,6 +104,7 @@ describe('', function() {
 
       it('Returns the same shortened code if attempted to add the same URL twice', function(done) {
         var firstCode = link.code;
+        console.log('firstCode:', link.code);
         request(app)
           .post('/links')
           .send({
