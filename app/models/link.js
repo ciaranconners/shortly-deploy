@@ -1,31 +1,14 @@
-// var db = require('../config');
-var crypto = require('crypto');
-
-// var Link = db.Model.extend({
-//   tableName: 'urls',
-//   hasTimestamps: true,
-//   defaults: {
-//     visits: 0
-//   },
-//   initialize: function() {
-//     this.on('creating', function(model, attrs, options) {
-//       var shasum = crypto.createHash('sha1');
-//       shasum.update(model.get('url'));
-//       model.set('code', shasum.digest('hex').slice(0, 5));
-//     });
-//   }
-// });
-
+var db = require('../config');
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/27017');
+var crypto = require('crypto');
 var Schema = mongoose.Schema;
 
 var linkSchema = new Schema({
-  date: {type: date, default: Date.now},
   url: String,
   code: Number,
   title: String,
-  visits: Number
+  visits: Number,
+  baseUrl: String
 });
 
 var Link = mongoose.model('Link', linkSchema);
@@ -36,9 +19,11 @@ var createShortUrl = function(url) {
   return shasum.digest('hex').slice(0, 5);
 };
 
-Link.pre('save', function(next) {
+linkSchema.pre('save', function(next) {
   var code = createShortUrl(this.url);
   this.code = code; // => save the code
+  // console.log('\n\n\n\n\n\n\n\nthis.code: ', this.code);
+  // next(this.code);
   next();
 });
 
